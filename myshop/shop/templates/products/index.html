@@ -69,13 +69,13 @@
 
       {% if brand %}
 
-      {% for b in brand %}
+      {% for b in brand.items %}
       <div class="col-md-3 mt-3">
 
 
 
         
-        <div class="cards" style="width: 100%; background-color: rgb(227, 227, 227); border-radius: 5px;">
+      <!---->  <div class="cards" style="width: 100%; background-color: rgb(227, 227, 227); border-radius: 5px;">
           <div class="image">
               <img src="{{url_for('static', filename='images/' + b.image_1)}}" alt="{{b.name}}" class="card-img-top">
           </div> 
@@ -131,26 +131,44 @@
 
       </div>
       {% endfor %}
+    </div>
 
 
-      {% elif get_cat_prod %}
-      {% for get_cat in get_cat_prod %}
+    <div class="row">
+      <div class="col text-center">
+        {% if brand.has_prev %}
+        <a href="{{url_for('get_brand', id=get_b.id, page=brand.prev_num)}}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+        {% endif %}
+        {% if brand.total> 20 %}
+        {%for page_num in brand.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+        {% if page_num %}
+        {% if brand.page == page_num %}
+        <a href="{{url_for('get_brand', id=get_b.id, page=page_num)}}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+        {% else %}
+      <a href="{{url_for('get_brand' , id=get_b.id, page=page_num)}}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
+      {% endif %}
+      {% else %}
+      ... 
+      {% endif %}
+      {% endfor %}
+      {% endif %}
 
+      {% if brand.has_next %}
+        <a href="{{url_for('get_brand',id=get_b.id, page=brand.next_num)}}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+        {% endif %}
+      </div>
+      
+    </div>
+
+
+      
+      
+<div class="row">
+  {% elif get_cat_prod %}
+  {% for get_cat in get_cat_prod.items %}
       <div class="col-md-3 mt-3">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
         <div class="cards" style="width: 100%; background-color: rgb(227, 227, 227); border-radius: 5px;">
           <div class="image">
               <img src="{{url_for('static', filename='images/' + get_cat.image_1)}}" alt="{{get_cat.name}}" class="card-img-top">
@@ -184,40 +202,60 @@
         
           
       </div>
+        <!---- <div class="card">
+              <img src="{{url_for('static', filename='images/' + get_cat.image_1)}}" alt="{{get_cat.name}}" class="card-img-top" height="200">
+              <div class="card-body">
+                  {% if get_cat.discount > 0 %}
+                  <h5 style="text-shadow: 1px 1px 2px #000; color: rgb(255, 255, 255);  position: absolute; top: 2%;  left: 84%; background-color: rgb(254, 3, 3);">  -{{get_cat.discount}}% </h5>
+                  {% endif %}
+                  <h5 class="text-center">{{get_cat.name}}</h5>
+                  <p class="text-center">Price ${{get_cat.price}}</p>
+              </div>
+              <div class="card-footer">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-       <!---- <div class="card">
-            <img src="{{url_for('static', filename='images/' + get_cat.image_1)}}" alt="{{get_cat.name}}" class="card-img-top" height="200">
-            <div class="card-body">
-                {% if get_cat.discount > 0 %}
-                <h5 style="text-shadow: 1px 1px 2px #000; color: rgb(255, 255, 255);  position: absolute; top: 2%;  left: 84%; background-color: rgb(254, 3, 3);">  -{{get_cat.discount}}% </h5>
-                {% endif %}
-                <h5 class="text-center">{{get_cat.name}}</h5>
-                <p class="text-center">Price ${{get_cat.price}}</p>
-            </div>
-            <div class="card-footer">
-
-                <a href="#" class="float-left btn btn-sm btn-primary">Details</a>
-                <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
-            </div>
-        </div>
-        ---->
+                  <a href="#" class="float-left btn btn-sm btn-primary">Details</a>
+                  <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+              </div>
+          </div>
+          ---->
 
       </div>
 
+
       {% endfor %}
+      
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        {% if get_cat_prod.has_prev %}
+        <a href="{{url_for('get_category', id=get_cat.id, page=get_cat_prod.prev_num)}}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+        {% endif %}
+        {% if get_cat_prod.total > 20 %}
+        {% for page_num in get_cat_prod.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+        {% if page_num %}
+        {% if get_cat_prod.page == page_num %}
+        <a href="{{url_for('get_category', id=get_cat.id, page=page_num)}}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+        {% else %}
+      <a href="{{url_for('get_category' , id=get_cat.id, page=page_num)}}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
+      {% endif %}
+      {% else %}
+      ... 
+      {% endif %} 
+      {% endfor %}
+      {% endif %}
+
+      {% if get_cat_prod.has_next %}
+        <a href="{{url_for('get_category',id=get_cat.id, page=get_cat_prod.next_num)}}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+        {% endif %}
+      </div>
+      
+    </div>
+
+    
+
+
+
+    <div class="row">
 
 
       {% else %}
@@ -225,7 +263,7 @@
 
 
 
-        {% for product in products %}
+        {% for product in products.items %}
         <div class="col-md-3 mt-3">
 
 
@@ -293,7 +331,34 @@
 
         </div>
         {% endfor %}
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          {% if products.has_prev %}
+          <a href="{{url_for('home', page=products.prev_num)}}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+          {% endif %}
+          {% if products.total > 20 %}
+          {%for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+          {% if page_num %}
+          {% if products.page == page_num %}
+          <a href="{{url_for('home', page=page_num)}}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+          {% else %}
+        <a href="{{url_for('home', page=page_num)}}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
         {% endif %}
+        {% else %}
+        ... 
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        {% if products.has_next %}
+          <a href="{{url_for('home', page=products.next_num)}}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+          {% endif %}
+        </div>
+        
+      </div>
+        
+        {% endif %} 
     </div>
-</div>
+
 {% endblock content %}
